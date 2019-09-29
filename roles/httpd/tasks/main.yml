@@ -1,0 +1,20 @@
+---
+- name: Add www-data user/group
+  import_tasks: users.yml
+  tags: [bootstrap, perms]
+
+- name: Install nginx
+  import_tasks: nginx-install.yml
+  tags: [bootstrap, nginx]
+
+- name: Set up file/directory permissions and ownership
+  import_tasks: nginx-file-perms.yml
+  tags: [bootstrap, nginx]
+
+- name: Base and default server config
+  import_tasks: nginx-config.yml
+  tags: [bootstrap, nginx]
+
+- name: Setup virtualhost
+  import_tasks: nginx-site.yml
+  tags: [site, nginx]

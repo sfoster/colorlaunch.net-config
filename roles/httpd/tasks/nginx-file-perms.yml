@@ -1,0 +1,34 @@
+---
+- name: Create default www directory
+  become: yes
+  file:
+    path: "/var/www/nginx-default"
+    state: directory
+    owner: "{{username}}"
+    group: www-data
+    mode: 0775
+
+- name: Apply directory permissions
+  become: yes
+  file:
+    path: "/var/www"
+    state: directory
+    group: www-data
+    mode: 0775
+    recurse: yes
+
+- name: Create and permission the log directory
+  become: yes
+  file:
+    path: "/var/log/nginx"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: 0775
+    recurse: yes
+
+- name: Create a default index.html
+  become: yes
+  copy:
+    src: "{{ nginx_html_file }}"
+    dest: "/var/www/nginx-default/index.html"

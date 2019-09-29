@@ -1,0 +1,29 @@
+---
+- name: copy the base nginx config file
+  become: yes
+  copy:
+    src: "{{ nginx_cfg_dir }}/nginx.conf"
+    dest: "/etc/nginx/nginx.conf"
+  tags:
+   - nginx
+   - nginx-base
+
+- name: copy the nginxconfig.io config files
+  become: yes
+  copy:
+    owner: "{{ username }}"
+    group: www-data
+    src: "{{ nginx_cfg_dir }}/nginxconfig.io"
+    dest: /etc/nginx/
+  tags:
+   - nginx
+   - nginx-base
+
+- name: restart nginx
+  become: yes
+  service:
+    name: nginx
+    state: restarted
+  tags:
+   - nginx
+   - nginx-restart

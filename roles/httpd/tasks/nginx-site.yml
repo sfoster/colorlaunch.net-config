@@ -1,0 +1,55 @@
+- name: copy the nginx config file and restart nginx
+  copy:
+    force: yes
+    owner: "{{ username }}"
+    group: www-data
+    src: "{{ nginx_cfg_dir }}/{{ hostname }}/{{ hostname }}.conf"
+    dest: /etc/nginx/conf.d/{{ hostname }}.conf
+  become: yes
+  tags: [site, nginx]
+
+- name: create project directories
+  become: yes
+  file:
+    path: "/var/www/{{ hostname }}/htdocs"
+    state: directory
+    owner: "{{ username }}"
+    group: www-data
+    mode: 0775
+  tags: [site, nginx]
+
+- name: Apply www directory permissions
+  become: yes
+  file:
+    path: "/var/www/{{ hostname }}"
+    state: directory
+    group: www-data
+    mode: '1775'
+    recurse: yes
+  tags: [site, nginx]
+
+- name: copy the content of the web site
+  synchronize:
+    delete: yes
+    archive: no
+    recursive: yes
+    src: "{{ htdocs_src }}/"
+    dest: "/var/www/{{ hostname }}/htdocs"
+  tags: [site, nginx]
+
+- name: Re-set htdocs group
+  become: yes
+  file:
+    path: "/var/www/{{ hostname }}/htdocs"
+    state: directory
+    group: www-data
+    mode: '1775'
+    recurse: yes
+  tags: [site, nginx]
+
+- name: restart nginx
+  become: yes
+  service:
+    name: nginx
+    state: restarted
+  tags: [site, nginx]

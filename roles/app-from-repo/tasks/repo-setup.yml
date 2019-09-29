@@ -1,0 +1,9 @@
+---
+- name: Create APP Directory
+  file: path={{homeDir}}/{{appDir}} state=directory
+  tags: [app]
+
+- name: Git Clone Repo
+  git: repo={{repo}} dest={{homeDir}}/{{appDir}} update=yes force=yes
+  register: git_finished
+  tags: [app]

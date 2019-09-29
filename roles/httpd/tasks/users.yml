@@ -1,0 +1,17 @@
+---
+- name: Ensure www-data group is present
+  become: yes
+  group:
+    name: www-data
+    state: present
+  tags:
+   - bootstrap
+
+- name: Add user to www-data group
+  become: yes
+  user:
+    append: 1
+    name: "{{ username }}"
+    groups: www-data, sudo
+  tags:
+   - bootstrap

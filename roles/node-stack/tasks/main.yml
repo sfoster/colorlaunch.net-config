@@ -1,0 +1,15 @@
+---
+- name: Install pm2
+  become: yes
+  import_tasks: pm2.yml
+  tags: [node-app, pm2]
+
+- name: Clear existing pm2 startup
+  become: yes
+  command: "pm2 unstartup"
+  tags: [node-app, pm2]
+
+- name: Add pm2 startup
+  become: yes
+  command: "env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u {{ username }} --hp /home/{{ username }}"
+  tags: [node-app, pm2]

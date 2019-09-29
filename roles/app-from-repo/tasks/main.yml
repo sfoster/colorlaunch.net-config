@@ -1,0 +1,11 @@
+---
+- name: Clone repo
+  import_tasks: repo-setup.yml
+  tags: [app]
+
+- name: Running NPM install
+  npm:
+    path: "{{homeDir}}/{{appDir}}"
+    production: yes
+  register: npm_finished
+  when: git_finished.changed

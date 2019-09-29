@@ -1,0 +1,10 @@
+---
+- name: Update and upgrade packages
+  import_tasks: apt-update-upgrade.yml
+  tags: [bootstrap]
+
+- name: Install common dependencies
+  import_tasks: install-deps.yml
+  tags: [bootstrap, install-deps]
+
+

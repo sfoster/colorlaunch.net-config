@@ -1,0 +1,13 @@
+---
+- name: Run the equivalent of "apt-get update" as a separate step
+  become: yes
+  apt:
+    update_cache: yes
+  tags:
+   - bootstrap
+
+- name: Upgrade packages
+  become: yes
+  apt: upgrade=safe
+  tags:
+   - bootstrap

@@ -1,0 +1,10 @@
+
+---
+# Variables here are applicable to all host groups
+
+localroot: "~/projects/colorlaunch/hosting"
+username: "ubuntu"
+hostname: "colorlaunch.net"
+nginx_cfg_dir: "{{ localroot }}/config"
+nginx_html_file: "{{ localroot }}/config/default/index.html"
+htdocs_src: "{{ localroot }}/htdocs"

@@ -1,0 +1,21 @@
+---
+- name: Add Nginx repo
+  become: yes
+  apt_repository:
+    repo: ppa:nginx/development
+  tags:
+   - apt-repo
+   - deps
+
+- name: Install Nginx
+  become: yes
+  apt:
+    name: nginx
+    state: present
+    force: yes
+    update_cache: yes
+  tags:
+   - install
+   - deps
+   - nginx
+
