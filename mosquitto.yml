@@ -1,0 +1,11 @@
+---
+- hosts: all
+  roles:
+    - broker
+  tasks:
+  - name: Verify running
+    become: yes
+    command: ps -ef | grep mosq
+    ignore_errors: yes
+    tags: mosquitto
+

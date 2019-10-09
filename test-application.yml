@@ -1,0 +1,22 @@
+---
+- hosts: all
+  vars:
+    nodejs_version: "10.x"
+    homeDir: /home/{{ username }}
+    repoDir: "{{homeDir}}/test-app"
+    appDir : "{{repoDir}}"
+    repo: https://github.com/bettiolo/node-echo.git
+  roles:
+    - app-from-repo
+  tasks:
+  - name: Stop APP
+    become: yes
+    command: pm2 stop app chdir={{appDir}}
+    ignore_errors: yes
+    tags: app
+  - name: Start APP
+    become: yes
+    command: pm2 start server.js --name app chdir={{appDir}}
+    ignore_errors: yes
+    tags: app
+    #when: npm_finished.changed

@@ -2,7 +2,7 @@
 - name: copy the base nginx config file
   become: yes
   copy:
-    src: "{{ nginx_cfg_dir }}/nginx.conf"
+    src: "{{ config_dir }}/nginx.conf"
     dest: "/etc/nginx/nginx.conf"
   tags:
    - nginx
@@ -13,7 +13,7 @@
   copy:
     owner: "{{ username }}"
     group: www-data
-    src: "{{ nginx_cfg_dir }}/nginxconfig.io"
+    src: "{{ config_dir }}/nginxconfig.io"
     dest: /etc/nginx/
   tags:
    - nginx

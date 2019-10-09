@@ -1,3 +1,25 @@
 ---
 - name: Install pm2
   npm: name=pm2 global=yes production=yes
+  tags: pm2-setup
+
+# pm2 startup produces a command that should be run with sudo to configure startup
+# but I'm just hardcoding it for the lightsail ubuntu arch here for now
+- name: Startup pm2
+  become: yes
+  command: env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u {{username}} --hp /home/{{username}}
+  tags: pm2-setup
+
+- name: Stop all pm2 processes
+  command: pm2 stop all
+  ignore_errors: yes
+  tags: pm2-setup
+
+- name: Delete all pm2 managed processes
+  command: pm2 delete all
+  ignore_errors: yes
+  tags: pm2-setup
+
+- name: Save the reset pm2 state
+  command: pm2 save
+  tags: pm2-setup

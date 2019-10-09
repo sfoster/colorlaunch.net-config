@@ -4,7 +4,9 @@
 
 localroot: "~/projects/colorlaunch/hosting"
 username: "ubuntu"
-hostname: "colorlaunch.net"
+hostname: "www.colorlaunch.net"
+sitename: "colorlaunch.net"
+config_dir: "{{ localroot }}/config"
 nginx_cfg_dir: "{{ localroot }}/config"
 nginx_html_file: "{{ localroot }}/config/default/index.html"
 htdocs_src: "{{ localroot }}/htdocs"

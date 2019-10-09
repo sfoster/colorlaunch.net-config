@@ -14,7 +14,3 @@
 - name: Base and default server config
   import_tasks: nginx-config.yml
   tags: [bootstrap, nginx]
-
-- name: Setup virtualhost
-  import_tasks: nginx-site.yml
-  tags: [site, nginx]

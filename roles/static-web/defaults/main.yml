@@ -1,0 +1,3 @@
+---
+htdocs_dir: "/var/www/{{sitename}}/htdocs;"
+should_sync_local: true

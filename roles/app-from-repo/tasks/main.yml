@@ -5,7 +5,7 @@
 
 - name: Running NPM install
   npm:
-    path: "{{homeDir}}/{{appDir}}"
+    path: "{{appDir}}"
     production: yes
   register: npm_finished
   when: git_finished.changed

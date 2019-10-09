@@ -1,0 +1,10 @@
+---
+- name: Install Mosquitto
+  become: yes
+  import_tasks: mosquitto-install.yml
+  tags: [mosquitto, mosquitto-install]
+
+- name: Setup and configure mosquitto
+  become: yes
+  import_tasks: mosquitto-setup.yml
+  tags: [mosquitto, mosquitto-setup]

@@ -1,0 +1,67 @@
+---
+# Note: need open port 1883 and 8883 via aws/lightsail console
+
+- name: Stop any existing mosquitto service
+  become: yes
+  command: systemctl stop mosquitto
+  ignore_errors: yes
+  tags:
+    - mosquitto
+    - mosquitto-install
+
+- name: Install dependencies for mosquitto
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+  - build-essential
+  - libwrap0-dev
+  - libssl-dev
+  - libc-ares-dev
+  - uuid-dev
+  - xsltproc
+  tags:
+    - deps
+    - mosquitto-deps
+    - mosquitto
+
+- name: Add mosquitto user
+  become: yes
+  user:
+    append: 1
+    name: mosquitto
+  tags:
+   - mosquitto
+   - mosquitto-user
+
+- name: Add Mosquitto repo
+  become: yes
+  apt_repository:
+    repo: ppa:mosquitto-dev/mosquitto-ppa
+  tags:
+    - mosquitto-deps
+    - mosquitto
+
+- name: Install Mosquitto
+  become: yes
+  apt:
+    name: mosquitto
+    state: present
+    force: yes
+    update_cache: yes
+  tags:
+    - mosquitto-install
+    - mosquitto
+
+- name: Install Mosquitto clients
+  become: yes
+  apt:
+    name: mosquitto-clients
+    state: present
+    force: yes
+    update_cache: yes
+  tags:
+    - mosquitto-install
+    - mosquitto

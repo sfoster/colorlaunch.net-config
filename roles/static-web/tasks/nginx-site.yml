@@ -1,17 +1,17 @@
 - name: copy the nginx config file and restart nginx
-  copy:
+  template:
     force: yes
     owner: "{{ username }}"
     group: www-data
-    src: "{{ nginx_cfg_dir }}/{{ hostname }}/{{ hostname }}.conf"
-    dest: /etc/nginx/conf.d/{{ hostname }}.conf
+    src: "{{ config_dir }}/{{ sitename }}/{{ sitename }}.conf"
+    dest: /etc/nginx/conf.d/{{ sitename }}.conf
   become: yes
   tags: [site, nginx]
 
 - name: create project directories
   become: yes
   file:
-    path: "/var/www/{{ hostname }}/htdocs"
+    path: "{{ htdocs_dir }}"
     state: directory
     owner: "{{ username }}"
     group: www-data
@@ -21,7 +21,7 @@
 - name: Apply www directory permissions
   become: yes
   file:
-    path: "/var/www/{{ hostname }}"
+    path: "{{ htdocs_dir }}"
     state: directory
     group: www-data
     mode: '1775'
@@ -34,13 +34,14 @@
     archive: no
     recursive: yes
     src: "{{ htdocs_src }}/"
-    dest: "/var/www/{{ hostname }}/htdocs"
+    dest: "{{ htdocs_dir }}"
   tags: [site, nginx]
+  when: should_sync_local
 
 - name: Re-set htdocs group
   become: yes
   file:
-    path: "/var/www/{{ hostname }}/htdocs"
+    path: "{{ htdocs_dir }}"
     state: directory
     group: www-data
     mode: '1775'

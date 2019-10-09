@@ -1,0 +1,4 @@
+---
+- name: Setup virtualhost
+  import_tasks: nginx-site.yml
+  tags: [site, nginx]

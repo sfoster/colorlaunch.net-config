@@ -1,0 +1,41 @@
+# - name: Setup colorlaunch user for mosquitto
+#   become: yes
+#   command: mosquitto_passwd -c /etc/mosquitto/pwfile colorlaunch
+#   ignore_errors: no
+#   tags:
+#     - mosquitto
+#     - mosquitto-setup
+
+- name: Restart the mosquitto service
+  become: yes
+  command: systemctl restart mosquitto
+  ignore_errors: yes
+  tags:
+    - mosquitto
+    - mosquitto-config
+
+# config is broken, default works for now
+# - name: Copy over mosquitto config
+#   become: yes
+#   copy:
+#     src: "{{ config_dir }}/mosquitto/{{ sitename }}.conf"
+#     dest: /etc/mosquitto/conf.d/
+#   tags:
+#     - mosquitto
+#     - mosquitto-config
+
+# legacy:
+# - name: Check that Mosquitto startup config exists
+#   stat:
+#     path: /etc/init/mosquitto.conf
+#   register: stat_result
+
+# - name: Copy over mosquitto config, if it doesnt exist already
+#   become: yes
+#   copy:
+#     src: "{{ config_dir }}/mosquitto/init.conf"
+#     dest: /etc/init/mosquitto.conf
+#   when: stat_result.stat.exists == False
+#   tags:
+#     - mosquitto
+#     - mosquitto-config
