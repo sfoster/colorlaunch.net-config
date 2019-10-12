@@ -3,8 +3,9 @@
   vars:
     nodejs_version: "10.x"
     homeDir: /home/{{ username }}
-    repoDir: "{{homeDir}}/colorlaunch-repo"
+    repoDir: "{{homeDir}}/colorlaunch-repo-{{version_suffix}}"
     appDir: "{{repoDir}}/spectrum/server"
+    appName: "spectrum-{{version_suffix}}"
     htdocs_dir: "{{repoDir}}/spectrum/htdocs"
     repo: https://github.com/sfoster/urban-pong-spectrum-2019.git
     should_sync_local: false
@@ -13,17 +14,17 @@
     - static-web
   tasks:
   - name: Stop pm2 spectrum
-    command: pm2 stop spectrum
+    command: "pm2 stop {{appName}}"
     ignore_errors: yes
     tags: app
 
   - name: Delete old pm2 spectrum
-    command: pm2 delete spectrum
+    command: "pm2 delete {{appName}}"
     ignore_errors: yes
     tags: app
 
   - name: Start spectrum process
-    command: pm2 start server.js --name spectrum --watch --ignore-watch="node_modules" chdir={{appDir}}
+    command: pm2 start server.js --name {{appName}} --watch --ignore-watch="node_modules" chdir={{appDir}}
     ignore_errors: no
     tags: app
 

@@ -1,0 +1,5 @@
+---
+- hosts: all
+- import_playbook: node-stack.yml
+- import_playbook: webserver.yml
+- import_playbook: application.yml

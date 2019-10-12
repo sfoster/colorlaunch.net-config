@@ -9,3 +9,11 @@
     production: yes
   register: npm_finished
   when: git_finished.changed
+
+- name: Update from remote repo
+  git: repo={{repo}} dest={{repoDir}} update=yes force=yes
+  register: git_finished
+  tags: [app, git]
+
+#git fetch origin
+#git reset --hard origin/master
