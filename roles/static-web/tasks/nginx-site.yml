@@ -1,4 +1,4 @@
-- name: copy the nginx config file and restart nginx
+- name: copy the nginx config file
   template:
     force: yes
     owner: "{{ username }}"
@@ -46,11 +46,4 @@
     group: www-data
     mode: '1775'
     recurse: yes
-  tags: [site, nginx]
-
-- name: restart nginx
-  become: yes
-  service:
-    name: nginx
-    state: restarted
   tags: [site, nginx]

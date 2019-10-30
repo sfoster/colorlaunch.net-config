@@ -3,16 +3,17 @@
   import_tasks: repo-setup.yml
   tags: [app]
 
+- name: Update from remote repo
+  git: repo={{repo}} dest={{repoDir}} update=yes force=yes
+  register: git_finished
+  tags: [app, git]
+
 - name: Running NPM install
   npm:
     path: "{{appDir}}"
     production: yes
   register: npm_finished
   when: git_finished.changed
-
-- name: Update from remote repo
-  git: repo={{repo}} dest={{repoDir}} update=yes force=yes
-  register: git_finished
   tags: [app, git]
 
 #git fetch origin

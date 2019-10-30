@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: webserver
   vars:
     nodejs_version: "10.x"
     homeDir: /home/{{ username }}
@@ -9,10 +9,49 @@
     htdocs_dir: "{{repoDir}}/spectrum/htdocs"
     repo: https://github.com/sfoster/urban-pong-spectrum-2019.git
     should_sync_local: false
+    certbot_admin_email: "{{admin_email}}"
+    certbot_create_if_missing: true
+    certbot_create_standalone_stop_services: ["nginx"]
+    certbot_certs:
+      - domains:
+          - "{{hostname}}"
+  pre_tasks:
+    - name: Update apt cache.
+      become: yes
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+      changed_when: false
+
+    - name: Install dependencies (RedHat).
+      yum: name={{ item }} state=present
+      when: ansible_os_family == 'RedHat'
+      with_items:
+        - epel-release
+    - name: Install cron (Debian).
+      apt: name=cron state=present
+      when: ansible_os_family == 'Debian'
   roles:
     - app-from-repo
     - static-web
+    - { role: ansible-role-certbot, become: yes }
   tasks:
+  - name: Flush handlers in case any configs have changed.
+    meta: flush_handlers
+
+  - name: Test secure connection to SSL domain.
+    uri:
+      url: https://{{hostname}}/
+      status_code: 200
+    delegate_to: localhost
+    become: false
+
+  - name: restart nginx
+    become: yes
+    service:
+      name: nginx
+      state: restarted
+    tags: [site, nginx]
+
   - name: Stop pm2 spectrum
     command: "pm2 stop {{appName}}"
     ignore_errors: yes
