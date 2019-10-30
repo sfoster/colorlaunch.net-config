@@ -1,0 +1,40 @@
+# Play 2: Configure instance with Certbot and Nginx.
+- hosts: aws_nginx
+  gather_facts: true
+  become: true
+
+  vars:
+    certbot_admin_email: "{{admin_email}}"
+    certbot_create_if_missing: true
+    certbot_create_standalone_stop_services: ["nginx"]
+    certbot_certs:
+      - domains:
+          - "{{hostname}}"
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+      changed_when: false
+
+    - name: Install dependencies (RedHat).
+      yum: name={{ item }} state=present
+      when: ansible_os_family == 'RedHat'
+      with_items:
+        - epel-release
+    - name: Install cron (Debian).
+      apt: name=cron state=present
+      when: ansible_os_family == 'Debian'
+
+  roles:
+    - geerlingguy.certbot
+
+  tasks:
+    - name: Flush handlers in case any configs have changed.
+      meta: flush_handlers
+
+    - name: Test secure connection to SSL domain.
+      uri:
+        url: https://{{hostname}}/
+        status_code: 200
+      delegate_to: localhost
+      become: false
