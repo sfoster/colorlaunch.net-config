@@ -6,6 +6,29 @@
 #     - mosquitto
 #     - mosquitto-setup
 
+- name: copy the mosquitto config file
+  template:
+    force: yes
+    owner: "{{ username }}"
+    src: "{{ config_dir }}/mosquitto/{{ sitename }}.conf"
+    dest: /etc/mosquitto/conf.d/{{ sitename }}.conf
+  become: yes
+  tags:
+    - mosquitto
+    - mosquitto-config
+
+- name: copy the mosquitto acl config file
+  template:
+    force: yes
+    owner: "mosquitto"
+    group: "mosquitto"
+    src: "{{ config_dir }}/mosquitto/{{ sitename }}.acl"
+    dest: /etc/mosquitto/{{ sitename }}.acl
+  become: yes
+  tags:
+    - mosquitto
+    - mosquitto-config
+
 - name: Restart the mosquitto service
   become: yes
   command: systemctl restart mosquitto
@@ -13,29 +36,3 @@
   tags:
     - mosquitto
     - mosquitto-config
-
-# config is broken, default works for now
-# - name: Copy over mosquitto config
-#   become: yes
-#   copy:
-#     src: "{{ config_dir }}/mosquitto/{{ sitename }}.conf"
-#     dest: /etc/mosquitto/conf.d/
-#   tags:
-#     - mosquitto
-#     - mosquitto-config
-
-# legacy:
-# - name: Check that Mosquitto startup config exists
-#   stat:
-#     path: /etc/init/mosquitto.conf
-#   register: stat_result
-
-# - name: Copy over mosquitto config, if it doesnt exist already
-#   become: yes
-#   copy:
-#     src: "{{ config_dir }}/mosquitto/init.conf"
-#     dest: /etc/init/mosquitto.conf
-#   when: stat_result.stat.exists == False
-#   tags:
-#     - mosquitto
-#     - mosquitto-config
