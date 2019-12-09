@@ -1,0 +1,18 @@
+# dev.colorlaunch.net.acl
+
+topic   read            #/
+topic   read            spectrum-0.1.0-dev/#
+pattern read            #/status
+
+# This only affects clients with username "spectrum-app".
+# It can read and publish to topics under spectrum-0.1.0-dev/
+user    spectrum-app
+topic   readwrite spectrum-0.1.0-dev/#
+
+# This only affects clients with username "spectrum-ctrl".
+user    spectrum-ctrl
+topic   read            spectrum-0.1.0-dev/#
+
+# This affects all clients.
+# Each user can read and publish to username/status
+pattern readwrite %u/status
