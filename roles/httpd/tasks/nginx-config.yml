@@ -1,13 +1,4 @@
 ---
-- name: copy the base nginx config file
-  become: yes
-  copy:
-    src: "{{ config_dir }}/nginx.conf"
-    dest: "/etc/nginx/nginx.conf"
-  tags:
-   - nginx
-   - nginx-base
-
 - name: copy the nginxconfig.io config files
   become: yes
   copy:
@@ -15,6 +6,15 @@
     group: www-data
     src: "{{ config_dir }}/nginxconfig.io"
     dest: /etc/nginx/
+  tags:
+   - nginx
+   - nginx-base
+
+- name: copy the base nginx config file
+  become: yes
+  copy:
+    src: "{{ config_dir }}/nginx.conf"
+    dest: "/etc/nginx/nginx.conf"
   tags:
    - nginx
    - nginx-base
