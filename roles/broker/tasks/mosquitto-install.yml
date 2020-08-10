@@ -36,6 +36,16 @@
    - mosquitto
    - mosquitto-user
 
+- name: Create and permission the log directory
+  become: yes
+  file:
+    path: "/var/log/mosquitto"
+    state: directory
+    owner: mosquitto
+    group: mosquitto
+    mode: 0775
+    recurse: yes
+
 - name: Add Mosquitto repo
   become: yes
   apt_repository:
@@ -49,7 +59,6 @@
   apt:
     name: mosquitto
     state: present
-    force: yes
     update_cache: yes
   tags:
     - mosquitto-install
@@ -60,7 +69,6 @@
   apt:
     name: mosquitto-clients
     state: present
-    force: yes
     update_cache: yes
   tags:
     - mosquitto-install

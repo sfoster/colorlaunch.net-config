@@ -5,7 +5,9 @@
     homeDir: /home/{{ username }}
     repoDir: "{{homeDir}}/colorlaunch-repo-{{version_suffix}}"
     appDir: "{{repoDir}}/spectrum/server"
-    appName: "spectrum-{{version_suffix}}"
+    appName: "spectrum"
+    apiVersion: "{{default_api_version}}"
+    appVersion: "{{default_api_version}}-{{version_suffix}}"
     htdocs_dir: "{{repoDir}}/spectrum/htdocs"
     repo: https://github.com/sfoster/urban-pong-spectrum-2019.git
     should_sync_local: false
@@ -62,8 +64,18 @@
     ignore_errors: yes
     tags: app
 
+  - name: copy the pm2 ecosystem file
+    template:
+      force: yes
+      owner: "{{ username }}"
+      group: "{{ username }}"
+      src: "{{ config_dir }}/pm2/{{ sitename }}.config.yml"
+      dest: "/home/{{ username }}/{{ sitename }}.config.yml"
+    become: yes
+    tags: app
+
   - name: Start spectrum process
-    command: pm2 start server.js --name {{appName}} --watch --ignore-watch="node_modules" chdir={{appDir}}
+    command: pm2 start {{ homeDir }}/{{ sitename }}.config.yml chdir={{appDir}}
     ignore_errors: no
     tags: app
 

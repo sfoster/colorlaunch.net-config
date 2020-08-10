@@ -1,5 +1,5 @@
 # Play 2: Configure instance with Certbot and Nginx.
-- hosts: aws_nginx
+- hosts: webserver
   gather_facts: true
   become: true
 
@@ -7,6 +7,11 @@
     certbot_admin_email: "{{admin_email}}"
     certbot_create_if_missing: true
     certbot_create_standalone_stop_services: ["nginx"]
+    certbot_auto_renew: true
+    certbot_auto_renew_user: "root"
+    certbot_auto_renew_hour: "20"
+    certbot_auto_renew_minute: "50"
+    certbot_auto_renew_options: "--quiet --no-self-upgrade --nginx"
     certbot_certs:
       - domains:
           - "{{hostname}}"
@@ -25,8 +30,12 @@
       apt: name=cron state=present
       when: ansible_os_family == 'Debian'
 
+    - name: Install certbox nginx plugin
+      apt: name=python-certbot-nginx state=present
+      when: ansible_os_family == 'Debian'
+
   roles:
-    - geerlingguy.certbot
+    - ansible-role-certbot
 
   tasks:
     - name: Flush handlers in case any configs have changed.

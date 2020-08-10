@@ -1,6 +1,6 @@
 # dev.colorlaunch.net.acl
 
-topic   read            #/
+topic   read            #
 topic   read            spectrum-0.1.0-dev/#
 pattern read            #/status
 

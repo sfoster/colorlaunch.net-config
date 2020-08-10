@@ -1,0 +1,13 @@
+apps:
+  - script   : './server.js'
+    name     : '{{appName}}'
+    watch    : true
+    ignore-watch: "node_modules"
+    env      :
+      NODE_ENV     : development
+      app_name     : '{{appName}}'
+      api_version  : '{{apiVersion}}'
+    env_production:
+      NODE_ENV     : production
+      app_name     : '{{appName}}'
+      api_version  : '{{apiVersion}}'
